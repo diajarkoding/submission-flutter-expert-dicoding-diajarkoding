@@ -1,0 +1,55 @@
+
+
+{
+    "adult": false,
+    "backdrop_path": "/path.jpg",
+    "created_by": null,
+    "episode_run_time": null,
+    "first_air_date": null,
+    "genres": [{"id": 1,"name": "Action"}],
+    "homepage": "https://google.com",
+    "id": 1,
+    "in_production": null,
+    "languages": null,
+    "last_air_date": null,
+    "last_episode_to_air": null,
+    "name": null,
+    "next_episode_to_air": null,
+    "networks": null,
+    "number_of_episodes": null,
+    "number_of_seasons": null,
+    "origin_country": null,
+    "original_language": "en",
+    "original_name": null,
+    "overview": "Overview",
+    "popularity": 1.0,
+    "poster_path": "/path.jpg",
+    "production_companies": [{"id": 1, "logo_path": null, "name": "Company", "origin_country": "US"} ],
+    "production_countries": [
+    {
+    "iso_3166_1": "US",
+    "name": "United States of America"
+    }
+    ],
+    "seasons": [],
+    "spoken_languages": [
+    {
+    "english_name": "English",
+    "iso_639_1": "en",
+    "name": "English"
+    },{
+    "english_name": "German",
+    "iso_639_1": "de",
+    "name": "Deutsch"
+    },{
+    "english_name": "Spanish",
+    "iso_639_1": "es",
+    "name": "Español"
+    }
+    ],
+    "status": "Status",
+    "tagline": "Tagline",
+    "type": null,
+    "vote_average": 1.0,
+    "vote_count": 1
+}
