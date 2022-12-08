@@ -40,6 +40,15 @@ dependencies:
   sqflite: ^2.0.0+3
   test_cov_console: ^0.2.2
 
+  about:
+    path: about
+  core:
+    path: core
+  movies:
+    path: movies
+  series:
+    path: series
+
 dev_dependencies:
   bloc_test: ^9.0.0
   build_runner: ^2.0.4
