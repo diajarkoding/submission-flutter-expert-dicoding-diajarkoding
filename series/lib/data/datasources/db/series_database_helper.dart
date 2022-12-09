@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'package:core/utils/encrypt.dart';
 import 'package:series/data/models/series/series_table.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
 class DatabaseHelperSeries {
   static DatabaseHelperSeries? _databaseHelperSeries;
@@ -26,7 +27,12 @@ class DatabaseHelperSeries {
     final path = await getDatabasesPath();
     final databasePath = '$path/series.db';
 
-    var db = await openDatabase(databasePath, version: 1, onCreate: _onCreate);
+    var db = await openDatabase(
+      databasePath,
+      version: 1,
+      onCreate: _onCreate,
+      password: encrypt('NontonSeries'),
+    );
     return db;
   }
 

@@ -8,6 +8,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  sqflite_sqlcipher: ^2.1.1+1
+  encrypt: ^5.0.1
   equatable: ^2.0.5
   flutter:
     sdk: flutter

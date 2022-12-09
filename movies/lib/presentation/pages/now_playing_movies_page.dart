@@ -1,8 +1,7 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/presentation/provider/movie_list_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
 import 'package:movies/presentation/widget/movie_card.dart';
-import 'package:provider/provider.dart';
 
 class NowPlayingMoviePage extends StatefulWidget {
   // ignore: constant_identifier_names
@@ -20,8 +19,8 @@ class _NowPlayingMoviePageState extends State<NowPlayingMoviePage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<MovieListNotifier>(context, listen: false)
-            .fetchNowPlayingMovies());
+        BlocProvider.of<NowPlayingMovieBloc>(context, listen: false)
+            .add(OnNowPLayingMovie()));
   }
 
   @override
@@ -32,25 +31,26 @@ class _NowPlayingMoviePageState extends State<NowPlayingMoviePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<MovieListNotifier>(
-          builder: (context, data, child) {
-            if (data.nowPlayingState == RequestState.Loading) {
+        child: BlocBuilder<NowPlayingMovieBloc, NowPlayingMovieState>(
+          builder: (context, state) {
+            if (state is NowPlayingMovieLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.nowPlayingState == RequestState.Loaded) {
+            } else if (state is NowPlayingMovieHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.nowPlayingMovies[index];
+                  final movie = state.result[index];
                   return MovieCard(movie);
                 },
-                itemCount: data.nowPlayingMovies.length,
+                itemCount: state.result.length,
+              );
+            } else if (state is NowPlayingMovieEmpty) {
+              return const Center(
+                child: Text('Tidak Ada Data'),
               );
             } else {
-              return Center(
-                key: const Key('error_message'),
-                child: Text(data.message),
-              );
+              return const Center(child: Text('Failed'));
             }
           },
         ),

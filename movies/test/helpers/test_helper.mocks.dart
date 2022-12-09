@@ -24,7 +24,7 @@ import 'package:http/src/client.dart' as _i17;
 import 'package:http/src/response.dart' as _i4;
 import 'package:http/src/streamed_response.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:sqflite/sqflite.dart' as _i16;
+import 'package:sqflite_sqlcipher/sqflite.dart' as _i16;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: comment_references

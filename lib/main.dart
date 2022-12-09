@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:core/core.dart';
 import 'package:core/utils/certificate.dart';
+import 'package:core/utils/ssl_pinning/http_ssl_pinning.dart';
 import 'package:core/utils/utils.dart';
 import 'package:about/about_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +10,13 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/presentation/bloc/search_movie_bloc.dart';
+import 'package:movies/presentation/bloc/detail_movie/detail_movie_bloc.dart';
+import 'package:movies/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
+import 'package:movies/presentation/bloc/popular_movie/popular_movie_bloc.dart';
+import 'package:movies/presentation/bloc/recommendation_movie/recommendation_movie_bloc.dart';
+import 'package:movies/presentation/bloc/search_movie/search_movie_bloc.dart';
+import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
+import 'package:movies/presentation/bloc/watchlist_movie/watchlist_movie_bloc.dart';
 import 'package:movies/presentation/pages/home_movie_page.dart';
 import 'package:movies/presentation/pages/movie_detail_page.dart';
 import 'package:movies/presentation/pages/now_playing_movies_page.dart';
@@ -55,6 +61,7 @@ void main() async {
   };
   di.init();
   HttpOverrides.global = MyHttpOverrides();
+  await HttpSSLPinning.init();
   runApp(MyApp());
 }
 
@@ -64,55 +71,43 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Movie
+        ChangeNotifierProvider(create: (_) => di.locator<MovieListNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
-        ),
+            create: (_) => di.locator<MovieDetailNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
-        ),
+            create: (_) => di.locator<MovieSearchNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<MovieSearchNotifier>(),
-        ),
+            create: (_) => di.locator<TopRatedMoviesNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
-        ),
+            create: (_) => di.locator<PopularMoviesNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
-        ),
-
-        // Movie Bloc
-        BlocProvider(
-          create: (_) => di.locator<SearchMovieBloc>(),
-        ),
+            create: (_) => di.locator<WatchlistMovieNotifier>()),
 
         // Series
+        ChangeNotifierProvider(create: (_) => di.locator<SeriesListNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SeriesListNotifier>(),
-        ),
+            create: (_) => di.locator<SeriesDetailNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SeriesDetailNotifier>(),
-        ),
+            create: (_) => di.locator<SeriesSearchNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SeriesSearchNotifier>(),
-        ),
+            create: (_) => di.locator<TopRatedSeriesNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedSeriesNotifier>(),
-        ),
+            create: (_) => di.locator<PopularSeriesNotifier>()),
         ChangeNotifierProvider(
-          create: (_) => di.locator<PopularSeriesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistSeriesNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) {
-            di.locator<SeriesListNotifier>();
-            di.locator<SeriesDetailNotifier>();
-          },
-        ),
+            create: (_) => di.locator<WatchlistSeriesNotifier>()),
+        ChangeNotifierProvider(create: (_) {
+          di.locator<SeriesListNotifier>();
+          di.locator<SeriesDetailNotifier>();
+        }),
+
+        // Movie Bloc
+        BlocProvider(create: (_) => di.locator<SearchMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<NowPlayingMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<PopularMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<TopRatedMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<DetailMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<RecommendationMovieBloc>()),
+        BlocProvider(create: (_) => di.locator<WatchListMovieBloc>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -135,9 +130,7 @@ class MyApp extends StatelessWidget {
             case MovieDetailPage.ROUTE_NAME:
               final id = settings.arguments as int;
               return MaterialPageRoute(
-                builder: (_) => MovieDetailPage(id: id),
-                settings: settings,
-              );
+                  builder: (_) => MovieDetailPage(id: id), settings: settings);
             case SearchPage.ROUTE_NAME:
               return CupertinoPageRoute(builder: (_) => SearchPage());
             case WatchlistMoviesPage.ROUTE_NAME:
@@ -146,6 +139,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => NowPlayingMoviePage());
             case AboutPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => AboutPage());
+
             // series
             case SeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => SeriesPage());
@@ -167,6 +161,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => DashboardSeriesPage());
             case NowPlayingSeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => NowPlayingSeriesPage());
+
             // default
             default:
               return MaterialPageRoute(builder: (_) {

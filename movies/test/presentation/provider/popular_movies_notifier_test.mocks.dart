@@ -2,16 +2,14 @@
 // in ditonton/test/presentation/provider/popular_movies_notifier_test.dart.
 // Do not manually edit this file.
 
-// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as i5;
 
-import 'dart:async' as _i5;
-
-import 'package:dartz/dartz.dart' as _i3;
-import 'package:core/utils//failure.dart' as _i6;
-import 'package:movies/domain/entities/movie.dart' as _i7;
-import 'package:movies/domain/repositories/movie_repository.dart' as _i2;
-import 'package:movies/domain/usecases/get_popular_movies.dart' as _i4;
-import 'package:mockito/mockito.dart' as _i1;
+import 'package:dartz/dartz.dart' as i3;
+import 'package:core/utils/failure.dart' as i6;
+import 'package:movies/domain/entities/movie.dart' as i7;
+import 'package:movies/domain/repositories/movie_repository.dart' as i2;
+import 'package:movies/domain/usecases/get_popular_movies.dart' as i4;
+import 'package:mockito/mockito.dart' as i1;
 
 // ignore_for_file: avoid_redundant_argument_values
 // ignore_for_file: comment_references
@@ -19,26 +17,26 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: unnecessary_parenthesis
 
-class _FakeMovieRepository extends _i1.Fake implements _i2.MovieRepository {}
+class _FakeMovieRepository extends i1.Fake implements i2.MovieRepository {}
 
-class _FakeEither<L, R> extends _i1.Fake implements _i3.Either<L, R> {}
+class _FakeEither<L, R> extends i1.Fake implements i3.Either<L, R> {}
 
 /// A class which mocks [GetPopularMovies].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetPopularMovies extends _i1.Mock implements _i4.GetPopularMovies {
+class MockGetPopularMovies extends i1.Mock implements i4.GetPopularMovies {
   MockGetPopularMovies() {
-    _i1.throwOnMissingStub(this);
+    i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.MovieRepository get repository =>
+  i2.MovieRepository get repository =>
       (super.noSuchMethod(Invocation.getter(#repository),
-          returnValue: _FakeMovieRepository()) as _i2.MovieRepository);
+          returnValue: _FakeMovieRepository()) as i2.MovieRepository);
   @override
-  _i5.Future<_i3.Either<_i6.Failure, List<_i7.Movie>>> execute() =>
+  i5.Future<i3.Either<i6.Failure, List<i7.Movie>>> execute() =>
       (super.noSuchMethod(Invocation.method(#execute, []),
-          returnValue: Future<_i3.Either<_i6.Failure, List<_i7.Movie>>>.value(
-              _FakeEither<_i6.Failure, List<_i7.Movie>>())) as _i5
-          .Future<_i3.Either<_i6.Failure, List<_i7.Movie>>>);
+              returnValue: Future<i3.Either<i6.Failure, List<i7.Movie>>>.value(
+                  _FakeEither<i6.Failure, List<i7.Movie>>()))
+          as i5.Future<i3.Either<i6.Failure, List<i7.Movie>>>);
 }

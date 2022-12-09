@@ -15,7 +15,13 @@ import 'package:movies/domain/usecases/get_watchlist_status.dart';
 import 'package:movies/domain/usecases/remove_watchlist.dart';
 import 'package:movies/domain/usecases/save_watchlist.dart';
 import 'package:movies/domain/usecases/search_movies.dart';
-import 'package:movies/presentation/bloc/search_movie_bloc.dart';
+import 'package:movies/presentation/bloc/detail_movie/detail_movie_bloc.dart';
+import 'package:movies/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
+import 'package:movies/presentation/bloc/popular_movie/popular_movie_bloc.dart';
+import 'package:movies/presentation/bloc/recommendation_movie/recommendation_movie_bloc.dart';
+import 'package:movies/presentation/bloc/search_movie/search_movie_bloc.dart';
+import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
+import 'package:movies/presentation/bloc/watchlist_movie/watchlist_movie_bloc.dart';
 import 'package:movies/presentation/provider/movie_detail_notifier.dart';
 import 'package:movies/presentation/provider/movie_list_notifier.dart';
 import 'package:movies/presentation/provider/movie_search_notifier.dart';
@@ -114,46 +120,23 @@ void init() {
   // helper
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
-  // external
-  locator.registerLazySingleton(() => http.Client());
-
   // provider series
-  locator.registerFactory(
-    () => SeriesListNotifier(
+  locator.registerFactory(() => SeriesListNotifier(
       getNowPlayingSeries: locator(),
       getPopularSeries: locator(),
       getTopRatedSeries: locator(),
-      getSeriesRecommendations: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => SeriesDetailNotifier(
+      getSeriesRecommendations: locator()));
+  locator.registerFactory(() => SeriesDetailNotifier(
       getSeriesDetail: locator(),
       getWatchListSeriesStatus: locator(),
       removeWatchlistSeries: locator(),
-      saveWatchlistSeries: locator(),
-    ),
-  );
+      saveWatchlistSeries: locator()));
+  locator.registerFactory(() => SeriesSearchNotifier(searchSeries: locator()));
+  locator.registerFactory(() => PopularSeriesNotifier(locator()));
   locator.registerFactory(
-    () => SeriesSearchNotifier(
-      searchSeries: locator(),
-    ),
-  );
+      () => TopRatedSeriesNotifier(getTopRatedSeries: locator()));
   locator.registerFactory(
-    () => PopularSeriesNotifier(
-      locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => TopRatedSeriesNotifier(
-      getTopRatedSeries: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => WatchlistSeriesNotifier(
-      getWatchlistSeries: locator(),
-    ),
-  );
+      () => WatchlistSeriesNotifier(getWatchlistSeries: locator()));
 
   // use case series
   locator.registerLazySingleton(() => GetNowPlayingSeries(locator()));
@@ -188,9 +171,15 @@ void init() {
       () => DatabaseHelperSeries());
 
   // bloc
+  locator.registerFactory(() => SearchMovieBloc(locator()));
+  locator.registerFactory(() => NowPlayingMovieBloc(locator()));
+  locator.registerFactory(() => PopularMovieBloc(locator()));
+  locator.registerFactory(() => TopRatedMovieBloc(locator()));
+  locator.registerFactory(() => DetailMovieBloc(locator()));
+  locator.registerFactory(() => RecommendationMovieBloc(locator()));
   locator.registerFactory(
-    () => SearchMovieBloc(
-      locator(),
-    ),
-  );
+      () => WatchListMovieBloc(locator(), locator(), locator(), locator()));
+
+  // external
+  locator.registerLazySingleton(() => http.Client());
 }

@@ -1,8 +1,7 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:movies/presentation/provider/top_rated_movies_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
 import 'package:movies/presentation/widget/movie_card.dart';
-import 'package:provider/provider.dart';
 
 class TopRatedMoviesPage extends StatefulWidget {
   // ignore: constant_identifier_names
@@ -20,8 +19,8 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<TopRatedMoviesNotifier>(context, listen: false)
-            .fetchTopRatedMovies());
+        BlocProvider.of<TopRatedMovieBloc>(context, listen: false)
+            .add(OnTopRatedMovie()));
   }
 
   @override
@@ -32,25 +31,26 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedMoviesNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TopRatedMovieBloc, TopRatedMovieState>(
+          builder: (context, state) {
+            if (state is TopRatedMovieLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is TopRatedMovieHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final movie = data.movies[index];
+                  final movie = state.result[index];
                   return MovieCard(movie);
                 },
-                itemCount: data.movies.length,
+                itemCount: state.result.length,
+              );
+            } else if (state is TopRatedMovieEmpty) {
+              return const Center(
+                child: Text('Tidak Ada Data'),
               );
             } else {
-              return Center(
-                key: const Key('error_message'),
-                child: Text(data.message),
-              );
+              return const Center(child: Text('Failed'));
             }
           },
         ),

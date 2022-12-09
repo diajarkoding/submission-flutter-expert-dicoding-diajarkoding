@@ -3,7 +3,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/presentation/bloc/search_movie_bloc.dart';
+import 'package:movies/presentation/bloc/search_movie/search_movie_bloc.dart';
 import 'package:movies/presentation/widget/movie_card.dart';
 
 class SearchPage extends StatelessWidget {
