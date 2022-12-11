@@ -30,6 +30,7 @@ void main() {
     },
     act: (bloc) => bloc.add(OnPopularMovie()),
     expect: () => [
+      PopularMovieLoading(),
       PopularMovieHasData(testMovieList),
     ],
     verify: (bloc) {
@@ -47,6 +48,7 @@ void main() {
     },
     act: (bloc) => bloc.add(OnPopularMovie()),
     expect: () => [
+      PopularMovieLoading(),
       PopularMovieError('Server Failure'),
     ],
     verify: (bloc) => PopularMovieLoading(),
@@ -61,6 +63,7 @@ void main() {
     },
     act: (bloc) => bloc.add(OnPopularMovie()),
     expect: () => [
+      PopularMovieLoading(),
       PopularMovieEmpty(),
     ],
   );

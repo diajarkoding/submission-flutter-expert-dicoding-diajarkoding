@@ -1,66 +1,79 @@
-import 'package:core/utils/state_enum.dart';
-import 'package:movies/domain/entities/movie.dart';
-import 'package:movies/presentation/pages/top_rated_movies_page.dart';
-import 'package:movies/presentation/provider/top_rated_movies_notifier.dart';
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'top_rated_movies_page_test.mocks.dart';
+import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
+import 'package:movies/presentation/pages/top_rated_movies_page.dart';
 
-@GenerateMocks([TopRatedMoviesNotifier])
+import '../../dummy_data/dummy_objects.dart';
+
+class MockTopRatedMovieBloc
+    extends MockBloc<TopRatedMovieEvent, TopRatedMovieState>
+    implements TopRatedMovieBloc {}
+
+class TopRatedMovieStateFake extends Fake implements TopRatedMovieState {}
+
+class TopRatedMovieEventFake extends Fake implements TopRatedMovieEvent {}
+
 void main() {
-  late MockTopRatedMoviesNotifier mockNotifier;
+  late MockTopRatedMovieBloc mockTopRatedMovieBloc;
 
   setUp(() {
-    mockNotifier = MockTopRatedMoviesNotifier();
+    mockTopRatedMovieBloc = MockTopRatedMovieBloc();
   });
 
   Widget makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<TopRatedMoviesNotifier>.value(
-      value: mockNotifier,
+    return BlocProvider<TopRatedMovieBloc>(
+      create: (context) => mockTopRatedMovieBloc,
       child: MaterialApp(
         home: body,
       ),
     );
   }
 
-  testWidgets('Page should display progress bar when loading',
+  testWidgets('Page should display center progress bar when loading',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loading);
+    when(() => mockTopRatedMovieBloc.state).thenReturn(TopRatedMovieLoading());
 
-    final progressFinder = find.byType(CircularProgressIndicator);
+    final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
 
-    await tester.pumpWidget(makeTestableWidget(const TopRatedMoviesPage()));
+    await tester.pumpWidget(
+      makeTestableWidget(const TopRatedMoviesPage()),
+    );
 
     expect(centerFinder, findsOneWidget);
-    expect(progressFinder, findsOneWidget);
+    expect(progressBarFinder, findsOneWidget);
   });
 
-  testWidgets('Page should display when data is loaded',
+  testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.movies).thenReturn(<Movie>[]);
+    when(() => mockTopRatedMovieBloc.state)
+        .thenReturn(TopRatedMovieHasData(testMovieList));
 
     final listViewFinder = find.byType(ListView);
 
-    await tester.pumpWidget(makeTestableWidget(const TopRatedMoviesPage()));
+    await tester.pumpWidget(
+      makeTestableWidget(const TopRatedMoviesPage()),
+    );
 
     expect(listViewFinder, findsOneWidget);
   });
 
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Error);
-    when(mockNotifier.message).thenReturn('Error message');
+    when(() => mockTopRatedMovieBloc.state).thenReturn(TopRatedMovieEmpty());
 
-    final textFinder = find.byKey(const Key('error_message'));
+    final emptyMessage = find.text('Tidak Ada Data');
 
-    await tester.pumpWidget(makeTestableWidget(const TopRatedMoviesPage()));
+    await tester.pumpWidget(
+      makeTestableWidget(const TopRatedMoviesPage()),
+    );
 
-    expect(textFinder, findsOneWidget);
+    expect(emptyMessage, findsOneWidget);
   });
 }
