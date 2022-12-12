@@ -56,10 +56,22 @@ class SearchPage extends StatelessWidget {
                       itemCount: result.length,
                     ),
                   );
+                } else if (state is SearchEmpty) {
+                  return const Expanded(
+                    child: Center(
+                      child: Text(
+                        key: Key('empty'),
+                        'Empty',
+                      ),
+                    ),
+                  );
                 } else if (state is SearchError) {
                   return Expanded(
                     child: Center(
-                      child: Text(state.message),
+                      child: Text(
+                        key: const Key('error'),
+                        state.message,
+                      ),
                     ),
                   );
                 } else {

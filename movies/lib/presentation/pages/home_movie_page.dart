@@ -109,9 +109,14 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                   );
                 } else if (state is NowPlayingMovieHasData) {
                   final data = state.result;
-                  return MovieList(data);
+                  return MovieList(data, 'Now Playing');
+                } else if (state is NowPlayingMovieError) {
+                  return const Text(
+                    'Failed',
+                    key: Key('error'),
+                  );
                 } else {
-                  return const Text('Failed');
+                  return Container();
                 }
               }),
               _buildSubHeading(
@@ -127,9 +132,14 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                   );
                 } else if (state is PopularMovieHasData) {
                   final data = state.result;
-                  return MovieList(data);
+                  return MovieList(data, 'Popular');
+                } else if (state is PopularMovieError) {
+                  return const Text(
+                    'Failed',
+                    key: Key('error'),
+                  );
                 } else {
-                  return const Text('Failed');
+                  return Container();
                 }
               }),
               _buildSubHeading(
@@ -145,9 +155,14 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                   );
                 } else if (state is TopRatedMovieHasData) {
                   final data = state.result;
-                  return MovieList(data);
+                  return MovieList(data, 'Top Rated');
+                } else if (state is TopRatedMovieError) {
+                  return const Text(
+                    'Failed',
+                    key: Key('error'),
+                  );
                 } else {
-                  return const Text('Failed');
+                  return Container();
                 }
               }),
             ],
@@ -184,8 +199,13 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
 
 class MovieList extends StatelessWidget {
   final List<Movie> movies;
+  final String keyText;
 
-  const MovieList(this.movies, {super.key});
+  const MovieList(
+    this.movies,
+    this.keyText, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +216,7 @@ class MovieList extends StatelessWidget {
         itemBuilder: (context, index) {
           final movie = movies[index];
           return Container(
+            key: Key("$keyText-$index"),
             padding: const EdgeInsets.all(8),
             child: InkWell(
               onTap: () {
