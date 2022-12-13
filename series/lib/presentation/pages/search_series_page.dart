@@ -1,17 +1,21 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:core/core.dart';
-import 'package:series/presentation/provider/series_search_notifier.dart';
-import 'package:series/presentation/widgets/series_card.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:series/presentation/bloc/search_series/search_series_bloc.dart';
+import 'package:series/presentation/widgets/series_card.dart';
 
 class SearchSeriesPage extends StatelessWidget {
   static const ROUTE_NAME = '/search-series';
+
+  const SearchSeriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Series'),
+        title: const Text('Search'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -19,38 +23,55 @@ class SearchSeriesPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              onSubmitted: (query) {
-                Provider.of<SeriesSearchNotifier>(context, listen: false)
-                    .fetchSeriesSearch(query);
+              onChanged: (query) {
+                context.read<SearchSeriesBloc>().add(OnQueryChanged(query));
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search title',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.search,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<SeriesSearchNotifier>(
-              builder: (context, data, child) {
-                if (data.state == RequestState.Loading) {
-                  return Center(
+            BlocBuilder<SearchSeriesBloc, SearchSeriesState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (data.state == RequestState.Loaded) {
-                  final result = data.searchResult;
+                } else if (state is SearchHasData) {
+                  final result = state.result;
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        final series = data.searchResult[index];
-                        return SeriesCard(series);
+                        final movie = result[index];
+                        return SeriesCard(movie);
                       },
                       itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchEmpty) {
+                  return const Expanded(
+                    child: Center(
+                      child: Text(
+                        key: Key('empty'),
+                        'Empty',
+                      ),
+                    ),
+                  );
+                } else if (state is SearchError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                        key: const Key('error'),
+                        state.message,
+                      ),
                     ),
                   );
                 } else {

@@ -1,13 +1,16 @@
-import 'package:core/core.dart';
-import 'package:series/presentation/provider/series_list_notifier.dart';
-import 'package:series/presentation/widgets/series_card.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:series/presentation/bloc/now_playing_series/now_playing_series_bloc.dart';
+import 'package:series/presentation/widgets/series_card.dart';
 
 class NowPlayingSeriesPage extends StatefulWidget {
+  // ignore: constant_identifier_names
   static const ROUTE_NAME = '/now-playing-series';
 
+  const NowPlayingSeriesPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _NowPlayingSeriesPageState createState() => _NowPlayingSeriesPageState();
 }
 
@@ -16,37 +19,38 @@ class _NowPlayingSeriesPageState extends State<NowPlayingSeriesPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<SeriesListNotifier>(context, listen: false)
-            .fetchNowPlayingSeries());
+        BlocProvider.of<NowPlayingSeriesBloc>(context, listen: false)
+            .add(OnNowPLayingSeries()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Now Playing Series'),
+        title: const Text('Now Playing Seriess'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<SeriesListNotifier>(
-          builder: (context, data, child) {
-            if (data.nowPlayingState == RequestState.Loading) {
-              return Center(
+        child: BlocBuilder<NowPlayingSeriesBloc, NowPlayingSeriesState>(
+          builder: (context, state) {
+            if (state is NowPlayingSeriesLoading) {
+              return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.nowPlayingState == RequestState.Loaded) {
+            } else if (state is NowPlayingSeriesHasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final series = data.nowPlayingSeries[index];
-                  return SeriesCard(series);
+                  final movie = state.result[index];
+                  return SeriesCard(movie);
                 },
-                itemCount: data.nowPlayingSeries.length,
+                itemCount: state.result.length,
+              );
+            } else if (state is NowPlayingSeriesEmpty) {
+              return const Center(
+                child: Text('Tidak Ada Data'),
               );
             } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
-              );
+              return const Center(child: Text('Failed'));
             }
           },
         ),

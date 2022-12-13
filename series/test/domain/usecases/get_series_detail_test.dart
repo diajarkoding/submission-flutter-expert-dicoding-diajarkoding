@@ -3,8 +3,8 @@ import 'package:series/domain/usecases/get_series_detail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../dummy_data/series/series_dummy_object.dart';
-import '../../helpers/series/series_test_helper.mocks.dart';
+import '../../dummy_data/series_dummy_object.dart';
+import '../../helpers/series_test_helper.mocks.dart';
 
 void main() {
   late GetSeriesDetail usecase;

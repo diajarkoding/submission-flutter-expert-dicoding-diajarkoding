@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../dummy_data/series/series_dummy_object.dart';
+import '../../dummy_data/series_dummy_object.dart';
 import 'watchlist_series_notifier_test.mocks.dart';
 
 @GenerateMocks([GetWatchlistSeries])

@@ -32,6 +32,14 @@ import 'package:movies/presentation/provider/top_rated_movies_notifier.dart';
 import 'package:movies/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
+import 'package:series/presentation/bloc/detail_series/detail_series_bloc.dart';
+import 'package:series/presentation/bloc/now_playing_series/now_playing_series_bloc.dart';
+import 'package:series/presentation/bloc/popular_series/popular_series_bloc.dart';
+import 'package:series/presentation/bloc/recommendation_series/recommendation_series_bloc.dart';
+
+import 'package:series/presentation/bloc/top_rated_series/top_rated_series_bloc.dart';
+import 'package:series/presentation/bloc/search_series/search_series_bloc.dart';
+import 'package:series/presentation/bloc/watchlist_series/watchlist_series_bloc.dart';
 import 'package:series/presentation/pages/search_series_page.dart';
 import 'package:series/presentation/pages/series_detail_page.dart';
 import 'package:series/presentation/provider/popular_series_notifier.dart';
@@ -106,6 +114,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<DetailMovieBloc>()),
         BlocProvider(create: (_) => di.locator<RecommendationMovieBloc>()),
         BlocProvider(create: (_) => di.locator<WatchListMovieBloc>()),
+
+        // Movie Bloc
+        BlocProvider(create: (_) => di.locator<SearchSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<NowPlayingSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<PopularSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<TopRatedSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<DetailSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<RecommendationSeriesBloc>()),
+        BlocProvider(create: (_) => di.locator<WatchListSeriesBloc>()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

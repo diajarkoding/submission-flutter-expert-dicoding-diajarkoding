@@ -4,7 +4,7 @@ import 'package:series/domain/usecases/get_top_rated_series.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../helpers/series/series_test_helper.mocks.dart';
+import '../../helpers/series_test_helper.mocks.dart';
 
 void main() {
   late GetTopRatedSeries usecase;

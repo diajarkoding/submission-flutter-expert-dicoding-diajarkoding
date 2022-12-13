@@ -46,6 +46,13 @@ import 'package:series/domain/usecases/get_watchlist_series_status.dart';
 import 'package:series/domain/usecases/remove_watchlist_series.dart';
 import 'package:series/domain/usecases/save_watchlist_series.dart';
 import 'package:series/domain/usecases/search_series.dart';
+import 'package:series/presentation/bloc/detail_series/detail_series_bloc.dart';
+import 'package:series/presentation/bloc/now_playing_series/now_playing_series_bloc.dart';
+import 'package:series/presentation/bloc/popular_series/popular_series_bloc.dart';
+import 'package:series/presentation/bloc/recommendation_series/recommendation_series_bloc.dart';
+import 'package:series/presentation/bloc/search_series/search_series_bloc.dart';
+import 'package:series/presentation/bloc/top_rated_series/top_rated_series_bloc.dart';
+import 'package:series/presentation/bloc/watchlist_series/watchlist_series_bloc.dart';
 import 'package:series/presentation/provider/popular_series_notifier.dart';
 import 'package:series/presentation/provider/series_detail_notifier.dart';
 import 'package:series/presentation/provider/series_list_notifier.dart';
@@ -173,7 +180,7 @@ void init() {
   locator.registerLazySingleton<DatabaseHelperSeries>(
       () => DatabaseHelperSeries());
 
-  // bloc
+  // bloc movies
   locator.registerFactory(() => SearchMovieBloc(locator()));
   locator.registerFactory(() => NowPlayingMovieBloc(locator()));
   locator.registerFactory(() => PopularMovieBloc(locator()));
@@ -182,6 +189,16 @@ void init() {
   locator.registerFactory(() => RecommendationMovieBloc(locator()));
   locator.registerFactory(
       () => WatchListMovieBloc(locator(), locator(), locator(), locator()));
+
+  // bloc series
+  locator.registerFactory(() => SearchSeriesBloc(locator()));
+  locator.registerFactory(() => NowPlayingSeriesBloc(locator()));
+  locator.registerFactory(() => PopularSeriesBloc(locator()));
+  locator.registerFactory(() => TopRatedSeriesBloc(locator()));
+  locator.registerFactory(() => DetailSeriesBloc(locator()));
+  locator.registerFactory(() => RecommendationSeriesBloc(locator()));
+  locator.registerFactory(
+      () => WatchListSeriesBloc(locator(), locator(), locator(), locator()));
 
   // external
   // locator.registerLazySingleton(() => http.Client());

@@ -1,32 +1,24 @@
 {
-  "dates": {
-    "maximum": "2021-05-23",
-    "minimum": "2021-04-05"
-  },
-  "page": 1,
-  "results": [
-    {
-      "adult": false,
-      "backdrop_path": "/path.jpg",
-      "genre_ids": [
-        1,
-        2,
-        3,
-        4
-      ],
-      "id": 1,
-      "original_language": "en",
-      "original_title": "Original Title",
-      "overview": "Overview",
-      "popularity": 1.0,
-      "poster_path": "/path.jpg",
-      "release_date": "2020-05-05",
-      "title": "Title",
-      "video": false,
-      "vote_average": 1.0,
-      "vote_count": 1
-    }
-  ],
-  "total_pages": 47,
-  "total_results": 940
+   "results" : [
+                    {
+                        "backdrop_path": "/3XjDhPzj7Myr8yzsTO8UB6E2oAu.jpg",
+                        "first_air_date": "2011-02-28",
+                        "genre_ids": [
+                        18,
+                        80
+                        ],
+                        "id": 31586,
+                        "name": "La Reina del Sur",
+                        "origin_country": [
+                        "US"
+                        ],
+                        "original_language": "es",
+                        "original_name": "La Reina del Sur",
+                        "overview": "After years of blood, sweat and tears, a woman of humble origin ends up becoming a drug trafficking legend, with all that that means...",
+                        "popularity": 2171.339,
+                        "poster_path": "/uBTlJDdPpRxYTfUnKw4wbuIGSEK.jpg",
+                        "vote_average": 7.8,
+                        "vote_count": 1393
+                    }
+   ]
 }

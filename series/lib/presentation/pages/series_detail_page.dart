@@ -1,20 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:series/domain/entities/series.dart';
-import 'package:series/domain/entities/series_detail.dart';
 import 'package:core/core.dart';
-import 'package:series/presentation/provider/series_detail_notifier.dart';
-import 'package:series/presentation/provider/series_list_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:series/domain/entities/series_detail.dart';
+import 'package:series/presentation/bloc/detail_series/detail_series_bloc.dart';
+import 'package:series/presentation/bloc/recommendation_series/recommendation_series_bloc.dart';
+import 'package:series/presentation/bloc/watchlist_series/watchlist_series_bloc.dart';
 
 class SeriesDetailPage extends StatefulWidget {
+  // ignore: constant_identifier_names
   static const ROUTE_NAME = '/detail-series';
 
   final int id;
-  SeriesDetailPage({required this.id});
+  const SeriesDetailPage({super.key, required this.id});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SeriesDetailPageState createState() => _SeriesDetailPageState();
 }
 
@@ -23,35 +25,41 @@ class _SeriesDetailPageState extends State<SeriesDetailPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<SeriesListNotifier>(context, listen: false)
-          .fetctSeriesRecommendations(widget.id);
-      Provider.of<SeriesDetailNotifier>(context, listen: false)
-          .fetchSeriesDetail(widget.id);
-      Provider.of<SeriesDetailNotifier>(context, listen: false)
-          .loadWatchlistStatus(widget.id);
+      context.read<DetailSeriesBloc>().add(OnDetailSeries(widget.id));
+      context
+          .read<RecommendationSeriesBloc>()
+          .add(OnRecommendationSeries(widget.id));
+      context.read<WatchListSeriesBloc>().add(WatchListSeriesStatus(widget.id));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isSeriesAddedToWatchList =
+        context.select<WatchListSeriesBloc, bool>((bloc) {
+      if (bloc.state is WatchListSeriesIsAdded) {
+        return (bloc.state as WatchListSeriesIsAdded).isAdded;
+      }
+      return false;
+    });
+
     return Scaffold(
-      body: Consumer2<SeriesListNotifier, SeriesDetailNotifier>(
-        builder: (context, provider1, provider2, _) {
-          if (provider1.recommendationState == RequestState.Loading ||
-              provider2.seriesDetailState == RequestState.Loading) {
-            return Center(
+      body: BlocBuilder<DetailSeriesBloc, DetailSeriesState>(
+        builder: (context, state) {
+          if (state is DetailSeriesLoading) {
+            return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (provider1.recommendationState == RequestState.Loaded ||
-              provider2.seriesDetailState == RequestState.Loaded) {
-            final seriesRecommendation = provider1.seriesRecommendations;
-            final seriesDetail = provider2.seriesDetail;
+          } else if (state is DetailSeriesHasData) {
+            final series = state.result;
             return SafeArea(
-              child: DetailContent(seriesDetail, seriesRecommendation,
-                  provider2.isAddedToWatchlist),
+              child: DetailContent(
+                series,
+                isSeriesAddedToWatchList,
+              ),
             );
           } else {
-            return Text('${provider1.message}\n${provider2.message}');
+            return const Text('Failed');
           }
         },
       ),
@@ -59,36 +67,38 @@ class _SeriesDetailPageState extends State<SeriesDetailPage> {
   }
 }
 
-class DetailContent extends StatelessWidget {
+// ignore: must_be_immutable
+class DetailContent extends StatefulWidget {
   final SeriesDetail series;
-  final List<Series> recommendations;
-  final bool isAddedWatchlist;
+  bool isAddedWatchlist;
 
-  DetailContent(
-    this.series,
-    this.recommendations,
-    this.isAddedWatchlist,
-  );
+  DetailContent(this.series, this.isAddedWatchlist, {super.key});
 
+  @override
+  State<DetailContent> createState() => _DetailContentState();
+}
+
+class _DetailContentState extends State<DetailContent> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         CachedNetworkImage(
-          imageUrl: 'https://image.tmdb.org/t/p/w500${series.posterPath}',
+          imageUrl:
+              'https://image.tmdb.org/t/p/w500${widget.series.posterPath}',
           width: screenWidth,
-          placeholder: (context, url) => Center(
+          placeholder: (context, url) => const Center(
             child: CircularProgressIndicator(),
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
         Container(
           margin: const EdgeInsets.only(top: 48 + 8),
           child: DraggableScrollableSheet(
             builder: (context, scrollController) {
               return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: kRichBlack,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
@@ -107,34 +117,37 @@ class DetailContent extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              series.name!,
+                              widget.series.name!,
                               style: kHeading5,
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                if (!isAddedWatchlist) {
-                                  await Provider.of<SeriesDetailNotifier>(
-                                          context,
-                                          listen: false)
-                                      .addWatchlist(series);
+                                if (!widget.isAddedWatchlist) {
+                                  context
+                                      .read<WatchListSeriesBloc>()
+                                      .add(WatchListSeriesAdd(widget.series));
                                 } else {
-                                  await Provider.of<SeriesDetailNotifier>(
-                                          context,
-                                          listen: false)
-                                      .removeFromWatchlist(series);
+                                  context.read<WatchListSeriesBloc>().add(
+                                      WatchListSeriesRemove(widget.series));
                                 }
+                                final state =
+                                    BlocProvider.of<WatchListSeriesBloc>(
+                                            context)
+                                        .state;
+                                String message = "";
 
-                                final message =
-                                    Provider.of<SeriesDetailNotifier>(context,
-                                            listen: false)
-                                        .watchlistMessage;
-
-                                if (message ==
-                                        SeriesDetailNotifier
-                                            .watchlistAddSuccessMessage ||
-                                    message ==
-                                        SeriesDetailNotifier
-                                            .watchlistRemoveSuccessMessage) {
+                                if (state is WatchListSeriesIsAdded) {
+                                  final isAdded = state.isAdded;
+                                  message = isAdded == false
+                                      ? messageIsAdd
+                                      : messageIsRemove;
+                                } else {
+                                  message = !widget.isAddedWatchlist
+                                      ? messageIsAdd
+                                      : messageIsRemove;
+                                }
+                                if (message == messageIsAdd ||
+                                    message == messageIsRemove) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(message)));
                                 } else {
@@ -146,14 +159,18 @@ class DetailContent extends StatelessWidget {
                                         );
                                       });
                                 }
+                                setState(() {
+                                  widget.isAddedWatchlist =
+                                      !widget.isAddedWatchlist;
+                                });
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  isAddedWatchlist
-                                      ? Icon(Icons.check)
-                                      : Icon(Icons.add),
-                                  Text('Watchlist'),
+                                  widget.isAddedWatchlist
+                                      ? const Icon(Icons.check)
+                                      : const Icon(Icons.add),
+                                  const Text('Watchlist'),
                                 ],
                               ),
                             ),
@@ -161,7 +178,7 @@ class DetailContent extends StatelessWidget {
                               height: 5,
                             ),
                             Text(
-                              _showGenres(series.genres),
+                              _showGenres(widget.series.genres),
                             ),
                             SizedBox(
                               height: 5,
@@ -169,13 +186,13 @@ class DetailContent extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${series.numberOfSeasons} Season •',
+                                  '${widget.series.numberOfSeasons} Season •',
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
                                 Text(
-                                  '${series.numberOfEpisodes} Episode',
+                                  '${widget.series.numberOfEpisodes} Episode',
                                 ),
                               ],
                             ),
@@ -190,10 +207,10 @@ class DetailContent extends StatelessWidget {
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: series.episodeRunTime!
+                              children: widget.series.episodeRunTime!
                                   .map(
                                     (e) => Text(
-                                      _showDuration(e as int)!,
+                                      _showDuration(e as int),
                                     ),
                                   )
                                   .toList(),
@@ -202,46 +219,41 @@ class DetailContent extends StatelessWidget {
                             Row(
                               children: [
                                 RatingBarIndicator(
-                                  rating: series.voteAverage / 2,
+                                  rating: widget.series.voteAverage / 2,
                                   itemCount: 5,
-                                  itemBuilder: (context, index) => Icon(
+                                  itemBuilder: (context, index) => const Icon(
                                     Icons.star,
                                     color: kMikadoYellow,
                                   ),
                                   itemSize: 24,
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text('${series.voteAverage}')
+                                Text('${widget.series.voteAverage}')
                               ],
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 16),
                             Text(
                               'Overview',
                               style: kHeading6,
                             ),
                             Text(
-                              series.overview,
+                              widget.series.overview,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            Consumer<SeriesListNotifier>(
-                              builder: (context, data, child) {
-                                if (data.recommendationState ==
-                                    RequestState.Loading) {
-                                  return Center(
+                            BlocBuilder<RecommendationSeriesBloc,
+                                RecommendationSeriesState>(
+                              builder: (context, state) {
+                                if (state is RecommendationSeriesLoading) {
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                } else if (data.recommendationState ==
-                                    RequestState.Error) {
-                                  return Text(data.message);
-                                } else if (data.recommendationState ==
-                                    RequestState.Loaded) {
-                                  return Container(
+                                } else if (state
+                                    is RecommendationSeriesHasData) {
+                                  final recommendations = state.result;
+                                  return SizedBox(
                                     height: 150,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
@@ -258,20 +270,21 @@ class DetailContent extends StatelessWidget {
                                               );
                                             },
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(8),
                                               ),
                                               child: CachedNetworkImage(
                                                 imageUrl:
                                                     'https://image.tmdb.org/t/p/w500${series.posterPath}',
                                                 placeholder: (context, url) =>
-                                                    Center(
+                                                    const Center(
                                                   child:
                                                       CircularProgressIndicator(),
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        Icon(Icons.error),
+                                                        const Icon(Icons.error),
                                               ),
                                             ),
                                           ),
@@ -280,8 +293,10 @@ class DetailContent extends StatelessWidget {
                                       itemCount: recommendations.length,
                                     ),
                                   );
-                                } else {
+                                } else if (state is RecommendationSeriesEmpty) {
                                   return Container();
+                                } else {
+                                  return const Text('Failed');
                                 }
                               },
                             ),
@@ -301,7 +316,9 @@ class DetailContent extends StatelessWidget {
                 ),
               );
             },
+            // initialChildSize: 0.5,
             minChildSize: 0.25,
+            // maxChildSize: 1.0,
           ),
         ),
         Padding(
@@ -310,7 +327,7 @@ class DetailContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -324,7 +341,7 @@ class DetailContent extends StatelessWidget {
   String _showGenres(List<GenreSeries> genres) {
     String result = '';
     for (var genre in genres) {
-      result += genre.name + ', ';
+      result += '${genre.name}, ';
     }
 
     if (result.isEmpty) {
@@ -334,14 +351,14 @@ class DetailContent extends StatelessWidget {
     return result.substring(0, result.length - 2);
   }
 
-  String? _showDuration(int runtime) {
+  String _showDuration(int runtime) {
     final int hours = runtime ~/ 60;
     final int minutes = runtime % 60;
 
     if (hours > 0) {
-      return '$hours Hourse $minutes Mintues';
+      return '${hours}h ${minutes}m';
     } else {
-      return '$minutes Mintues';
+      return '${minutes}m';
     }
   }
 }

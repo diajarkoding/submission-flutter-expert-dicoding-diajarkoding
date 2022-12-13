@@ -4,7 +4,7 @@ import 'package:series/domain/usecases/get_series_recommendations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../helpers/series/series_test_helper.mocks.dart';
+import '../../helpers/series_test_helper.mocks.dart';
 
 void main() {
   late GetSeriesRecommendations usecase;
