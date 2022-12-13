@@ -8,21 +8,20 @@ import '../../json_reader.dart';
 
 void main() {
   final tSeriesModel = SeriesModel(
-    backdropPath: "/5kkw5RT1OjTAMh3POhjo5LdaACZ.jpg",
-    firstAirDate: "2021-10-12",
-    genreIds: [80, 10765],
-    id: 90462,
-    name: "Chucky",
-    originCountry: ["US"],
-    originalLanguage: "en",
-    originalName: "Chucky",
-    overview:
-        "After a vintage Chucky doll turns up at a suburban yard sale, an idyllic American town is thrown into chaos as a series of horrifying murders begin to expose the town’s hypocrisies and secrets. Meanwhile, the arrival of enemies — and allies — from Chucky’s past threatens to expose the truth behind the killings, as well as the demon doll’s untold origins.",
-    popularity: 3545.458,
-    posterPath: "/kY0BogCM8SkNJ0MNiHB3VTM86Tz.jpg",
-    voteAverage: 7.9,
-    voteCount: 3466,
-  );
+      backdropPath: "/3XjDhPzj7Myr8yzsTO8UB6E2oAu.jpg",
+      firstAirDate: "2011-02-28",
+      genreIds: [18, 80],
+      id: 31586,
+      name: "La Reina del Sur",
+      originCountry: ["US"],
+      originalLanguage: "es",
+      originalName: "La Reina del Sur",
+      overview:
+          "After years of blood, sweat and tears, a woman of humble origin ends up becoming a drug trafficking legend, with all that that means...",
+      popularity: 2171.339,
+      posterPath: "/uBTlJDdPpRxYTfUnKw4wbuIGSEK.jpg",
+      voteAverage: 7.8,
+      voteCount: 1393);
 
   final tSeriesResponseModel =
       SeriesResponse(seriesList: <SeriesModel>[tSeriesModel]);
@@ -50,23 +49,23 @@ void main() {
         "results": [
           {
             "adult": null,
-            "backdrop_path": "/5kkw5RT1OjTAMh3POhjo5LdaACZ.jpg",
-            "first_air_date": "2021-10-12",
-            "genre_ids": [80, 10765],
-            "id": 90462,
             "media_type": null,
-            "name": "Chucky",
+            "backdrop_path": "/3XjDhPzj7Myr8yzsTO8UB6E2oAu.jpg",
+            "first_air_date": "2011-02-28",
+            "genre_ids": [18, 80],
+            "id": 31586,
+            "name": "La Reina del Sur",
             "origin_country": ["US"],
-            "original_language": "en",
-            "original_name": "Chucky",
+            "original_language": "es",
+            "original_name": "La Reina del Sur",
             "overview":
-                "After a vintage Chucky doll turns up at a suburban yard sale, an idyllic American town is thrown into chaos as a series of horrifying murders begin to expose the town’s hypocrisies and secrets. Meanwhile, the arrival of enemies — and allies — from Chucky’s past threatens to expose the truth behind the killings, as well as the demon doll’s untold origins.",
-            "popularity": 3545.458,
-            "poster_path": "/kY0BogCM8SkNJ0MNiHB3VTM86Tz.jpg",
-            "vote_average": 7.9,
-            "vote_count": 3466
+                "After years of blood, sweat and tears, a woman of humble origin ends up becoming a drug trafficking legend, with all that that means...",
+            "popularity": 2171.339,
+            "poster_path": "/uBTlJDdPpRxYTfUnKw4wbuIGSEK.jpg",
+            "vote_average": 7.8,
+            "vote_count": 1393
           }
-        ],
+        ]
       };
       expect(result, expectedJsonMap);
     });
