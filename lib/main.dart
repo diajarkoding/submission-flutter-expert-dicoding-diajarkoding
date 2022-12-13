@@ -42,11 +42,9 @@ import 'package:series/presentation/provider/top_rated_series_notifier.dart';
 import 'package:series/presentation/provider/watchlist_series_notifier.dart';
 
 import 'package:series/presentation/pages/series_page.dart';
-import 'package:series/presentation/pages/dashboard_series_page.dart';
 import 'package:series/presentation/pages/now_playing_series_page.dart';
 import 'package:series/presentation/pages/popular_series_page.dart';
 import 'package:series/presentation/pages/top_rated_series_page.dart';
-import 'package:series/presentation/pages/watchlist_series_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -149,16 +147,12 @@ class MyApp extends StatelessWidget {
                 builder: (_) => SeriesDetailPage(id: id),
                 settings: settings,
               );
-            case WatchlistSeriesPage.ROUTE_NAME:
-              return MaterialPageRoute(builder: (_) => WatchlistSeriesPage());
             case PopularSeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => PopularSeriesPage());
             case TopRatedSeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => TopRatedSeriesPage());
             case SearchSeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => SearchSeriesPage());
-            case DashboardSeriesPage.ROUTE_NAME:
-              return MaterialPageRoute(builder: (_) => DashboardSeriesPage());
             case NowPlayingSeriesPage.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => NowPlayingSeriesPage());
 

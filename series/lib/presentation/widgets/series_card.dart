@@ -25,6 +25,7 @@ class SeriesCard extends StatelessWidget {
           alignment: Alignment.bottomLeft,
           children: [
             Card(
+              color: Colors.white24,
               child: Container(
                 margin: const EdgeInsets.only(
                   left: 16 + 80 + 16,

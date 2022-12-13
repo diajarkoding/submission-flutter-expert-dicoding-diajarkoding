@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -48,7 +47,7 @@ class Shared {
 
     final httpClient = HttpClient(context: context);
     httpClient.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => false;
+        (X509Certificate cert, String host, int port) => true;
 
     return httpClient;
   }

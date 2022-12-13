@@ -1,3 +1,6 @@
+// ignore_for_file: unused_import
+
+import 'package:core/utils/ssl_pinning/http_ssl_pinning.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 import 'package:movies/data/datasources/db/database_helper.dart';
@@ -181,5 +184,6 @@ void init() {
       () => WatchListMovieBloc(locator(), locator(), locator(), locator()));
 
   // external
-  locator.registerLazySingleton(() => http.Client());
+  // locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => HttpSSLPinning.client);
 }

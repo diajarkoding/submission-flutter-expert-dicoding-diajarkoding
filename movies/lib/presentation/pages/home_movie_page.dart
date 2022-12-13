@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
 import 'package:movies/presentation/bloc/popular_movie/popular_movie_bloc.dart';
 import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
-import 'package:series/presentation/pages/dashboard_series_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 
@@ -15,6 +14,7 @@ import 'package:movies/presentation/pages/popular_movies_page.dart';
 import 'package:movies/presentation/pages/search_page.dart';
 import 'package:movies/presentation/pages/top_rated_movies_page.dart';
 import 'package:movies/presentation/pages/watchlist_movies_page.dart';
+import 'package:series/presentation/pages/series_page.dart';
 
 class HomeMoviePage extends StatefulWidget {
   const HomeMoviePage({super.key});
@@ -59,7 +59,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
               leading: const Icon(Icons.movie),
               title: const Text('Series'),
               onTap: () {
-                Navigator.pushNamed(context, DashboardSeriesPage.ROUTE_NAME);
+                Navigator.pushNamed(context, SeriesPage.ROUTE_NAME);
               },
             ),
             ListTile(
