@@ -52,6 +52,7 @@ dependencies:
   series:
     path: series
 
+# dev 
 dev_dependencies:
   bloc_test: ^9.0.0
   build_runner: ^2.0.4
