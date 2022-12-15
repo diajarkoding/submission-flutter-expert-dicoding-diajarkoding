@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:series/presentation/bloc/popular_series/popular_series_bloc.dart';
 
 import '../../dummy_data/series_dummy_object.dart';
-import '../provider/popular_series_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_series.mocks.dart';
 
 void main() {
   late MockGetPopularSeries mockGetPopularSeries;

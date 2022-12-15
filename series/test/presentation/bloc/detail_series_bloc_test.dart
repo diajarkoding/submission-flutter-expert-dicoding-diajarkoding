@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:series/presentation/bloc/detail_series/detail_series_bloc.dart';
 import '../../dummy_data/series_dummy_object.dart';
-import '../provider/series_detail_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_series.mocks.dart';
 
 void main() {
   late MockGetSeriesDetail mockGetSeriesDetail;

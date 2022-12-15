@@ -5,12 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:series/presentation/bloc/watchlist_series/watchlist_series_bloc.dart';
 import '../../dummy_data/series_dummy_object.dart';
-import '../provider/series_detail_notifier_test.mocks.dart';
-import '../provider/watchlist_series_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_series.mocks.dart';
 
 void main() {
   late MockGetWatchlistSeries mockGetWatchlistSeries;
-  late MockGetWatchListSeriesStatus mockGetWatchListSeriesStatus;
+  late MockGetWatchListStatusSeries mockGetWatchListSeriesStatus;
   late MockRemoveWatchlistSeries mockRemoveWatchlistSeries;
   late MockSaveWatchlistSeries mockSaveWatchlistSeries;
   late WatchListSeriesBloc watchListSeriesBloc;
@@ -19,7 +18,7 @@ void main() {
     mockSaveWatchlistSeries = MockSaveWatchlistSeries();
     mockRemoveWatchlistSeries = MockRemoveWatchlistSeries();
     mockGetWatchlistSeries = MockGetWatchlistSeries();
-    mockGetWatchListSeriesStatus = MockGetWatchListSeriesStatus();
+    mockGetWatchListSeriesStatus = MockGetWatchListStatusSeries();
     watchListSeriesBloc = WatchListSeriesBloc(
       mockGetWatchlistSeries,
       mockGetWatchListSeriesStatus,

@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:movies/presentation/bloc/now_playing_movie/now_playing_movie_bloc.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import '../provider/movie_list_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_helper.mocks.dart';
 
 void main() {
   late MockGetNowPlayingMovies mockGetNowPlayingMovies;

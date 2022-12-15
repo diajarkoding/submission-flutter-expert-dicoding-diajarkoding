@@ -5,21 +5,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:movies/presentation/bloc/watchlist_movie/watchlist_movie_bloc.dart';
 import '../../dummy_data/dummy_objects.dart';
-import '../provider/movie_detail_notifier_test.mocks.dart';
-import '../provider/watchlist_movie_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_helper.mocks.dart';
 
 void main() {
   late MockGetWatchlistMovies mockGetWatchlistMovies;
-  late MockGetWatchListStatus mockGetWatchListStatus;
-  late MockRemoveWatchlist mockRemoveWatchlist;
-  late MockSaveWatchlist mockSaveWatchlist;
+  late MockGetWatchListStatusMovie mockGetWatchListStatus;
+  late MockRemoveWatchlistMovie mockRemoveWatchlist;
+  late MockSaveWatchlistMovie mockSaveWatchlist;
   late WatchListMovieBloc watchListMovieBloc;
 
   setUp(() {
-    mockSaveWatchlist = MockSaveWatchlist();
-    mockRemoveWatchlist = MockRemoveWatchlist();
+    mockSaveWatchlist = MockSaveWatchlistMovie();
+    mockRemoveWatchlist = MockRemoveWatchlistMovie();
     mockGetWatchlistMovies = MockGetWatchlistMovies();
-    mockGetWatchListStatus = MockGetWatchListStatus();
+    mockGetWatchListStatus = MockGetWatchListStatusMovie();
     watchListMovieBloc = WatchListMovieBloc(
       mockGetWatchlistMovies,
       mockGetWatchListStatus,

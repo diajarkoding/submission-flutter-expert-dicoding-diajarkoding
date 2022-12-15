@@ -7,7 +7,7 @@ import 'package:mockito/mockito.dart';
 import 'package:series/domain/entities/series.dart';
 import 'package:series/domain/usecases/search_series.dart';
 import 'package:series/presentation/bloc/search_series/search_series_bloc.dart';
-import '../provider/series_search_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_series.mocks.dart';
 
 @GenerateMocks([SearchSeries])
 void main() {

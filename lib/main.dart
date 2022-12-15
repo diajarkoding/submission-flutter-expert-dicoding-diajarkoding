@@ -24,12 +24,6 @@ import 'package:movies/presentation/pages/popular_movies_page.dart';
 import 'package:movies/presentation/pages/search_page.dart';
 import 'package:movies/presentation/pages/top_rated_movies_page.dart';
 import 'package:movies/presentation/pages/watchlist_movies_page.dart';
-import 'package:movies/presentation/provider/movie_detail_notifier.dart';
-import 'package:movies/presentation/provider/movie_list_notifier.dart';
-import 'package:movies/presentation/provider/movie_search_notifier.dart';
-import 'package:movies/presentation/provider/popular_movies_notifier.dart';
-import 'package:movies/presentation/provider/top_rated_movies_notifier.dart';
-import 'package:movies/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
 import 'package:series/presentation/bloc/detail_series/detail_series_bloc.dart';
@@ -42,12 +36,6 @@ import 'package:series/presentation/bloc/search_series/search_series_bloc.dart';
 import 'package:series/presentation/bloc/watchlist_series/watchlist_series_bloc.dart';
 import 'package:series/presentation/pages/search_series_page.dart';
 import 'package:series/presentation/pages/series_detail_page.dart';
-import 'package:series/presentation/provider/popular_series_notifier.dart';
-import 'package:series/presentation/provider/series_detail_notifier.dart';
-import 'package:series/presentation/provider/series_list_notifier.dart';
-import 'package:series/presentation/provider/series_search_notifier.dart';
-import 'package:series/presentation/provider/top_rated_series_notifier.dart';
-import 'package:series/presentation/provider/watchlist_series_notifier.dart';
 
 import 'package:series/presentation/pages/series_page.dart';
 import 'package:series/presentation/pages/now_playing_series_page.dart';
@@ -76,36 +64,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Movie
-        ChangeNotifierProvider(create: (_) => di.locator<MovieListNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<MovieDetailNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<MovieSearchNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<TopRatedMoviesNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<PopularMoviesNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<WatchlistMovieNotifier>()),
-
-        // Series
-        ChangeNotifierProvider(create: (_) => di.locator<SeriesListNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<SeriesDetailNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<SeriesSearchNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<TopRatedSeriesNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<PopularSeriesNotifier>()),
-        ChangeNotifierProvider(
-            create: (_) => di.locator<WatchlistSeriesNotifier>()),
-        ChangeNotifierProvider(create: (_) {
-          di.locator<SeriesListNotifier>();
-          di.locator<SeriesDetailNotifier>();
-        }),
-
         // Movie Bloc
         BlocProvider(create: (_) => di.locator<SearchMovieBloc>()),
         BlocProvider(create: (_) => di.locator<NowPlayingMovieBloc>()),
@@ -115,7 +73,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.locator<RecommendationMovieBloc>()),
         BlocProvider(create: (_) => di.locator<WatchListMovieBloc>()),
 
-        // Movie Bloc
+        // Series Bloc
         BlocProvider(create: (_) => di.locator<SearchSeriesBloc>()),
         BlocProvider(create: (_) => di.locator<NowPlayingSeriesBloc>()),
         BlocProvider(create: (_) => di.locator<PopularSeriesBloc>()),

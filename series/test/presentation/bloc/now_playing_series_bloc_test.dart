@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:series/presentation/bloc/now_playing_series/now_playing_series_bloc.dart';
 
 import '../../dummy_data/series_dummy_object.dart';
-import '../provider/series_list_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_series.mocks.dart';
 
 void main() {
   late MockGetNowPlayingSeries mockGetNowPlayingSeries;

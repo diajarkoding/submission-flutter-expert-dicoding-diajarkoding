@@ -19,14 +19,14 @@ class Shared {
       } else {
         try {
           certFileBytes =
-              (await rootBundle.load('assets/certificates/ssl_pinning.pem'))
+              (await rootBundle.load('assets/certificates/cer_themoviedb.pem'))
                   .buffer
                   .asInt8List();
-          debugPrint('Successfully access and load ssl_pinning.pem file!');
+          debugPrint('Successfully access and load cer_themoviedb.pem file!');
         } catch (e) {
           certFileBytes = utf8.encode(_certificatedString);
           debugPrint(
-              'Error access and load ssl_pinning.pem file.\n${e.toString()}');
+              'Error access and load cer_themoviedb.pem file.\n${e.toString()}');
         }
       }
 
@@ -47,7 +47,7 @@ class Shared {
 
     final httpClient = HttpClient(context: context);
     httpClient.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
+        (X509Certificate cert, String host, int port) => false;
 
     return httpClient;
   }
@@ -60,25 +60,37 @@ class Shared {
 }
 
 const _certificatedString = """-----BEGIN CERTIFICATE-----
-MIID2DCCA12gAwIBAgISA7M7OQ83/SVbCHyxshLDsraDMAoGCCqGSM49BAMDMDIx
-CzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQDEwJF
-MTAeFw0yMjEwMjMwODQ1NDdaFw0yMzAxMjEwODQ1NDZaMB8xHTAbBgNVBAMMFCou
-c29tZS1yYW5kb20tYXBpLm1sMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENeGc
-g2msf5icwy3WeulqtGu8HPeD9bclB/iBLDA3ZtT3HerJRyLFhZwaxaC5ROv6nFWn
-WuXA3gNdegfx7R7pgaOCAmQwggJgMA4GA1UdDwEB/wQEAwIHgDAdBgNVHSUEFjAU
-BggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUED3A
-td/wIUp6JWH+Ato667asGmEwHwYDVR0jBBgwFoAUWvPtK/w2wjd5uVIw6lRvz1XL
-LqwwVQYIKwYBBQUHAQEESTBHMCEGCCsGAQUFBzABhhVodHRwOi8vZTEuby5sZW5j
-ci5vcmcwIgYIKwYBBQUHMAKGFmh0dHA6Ly9lMS5pLmxlbmNyLm9yZy8wMwYDVR0R
-BCwwKoIUKi5zb21lLXJhbmRvbS1hcGkubWyCEnNvbWUtcmFuZG9tLWFwaS5tbDBM
-BgNVHSAERTBDMAgGBmeBDAECATA3BgsrBgEEAYLfEwEBATAoMCYGCCsGAQUFBwIB
-FhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCCAQUGCisGAQQB1nkCBAIEgfYE
-gfMA8QB3ALc++yTfnE26dfI5xbpY9Gxd/ELPep81xJ4dCYEl7bSZAAABhAQ776oA
-AAQDAEgwRgIhAJlPecy0EyNqb7rAY9E6NClxF65p+bhJJQS9VNIuw+FmAiEAopYw
-kM3zSa30rOHrzG/ypZ5hjpO+zkhH4Udq4bBf8wQAdgDoPtDaPvUGNTLnVyi8iWvJ
-A9PL0RFr7Otp4Xd9bQa9bgAAAYQEO++XAAAEAwBHMEUCIBEbCs6qDSx9R7EtRsh5
-2qgGg2bermljCwWGiwP62yYZAiEAgvht3+h2bJJa9082aIz99A4Ee8lnpl4e1xn9
-lvZxnWkwCgYIKoZIzj0EAwMDaQAwZgIxANq7lI13jjynCFwujkaWHMrPzlZ0j7lk
-Gv2HFUDRhz/nNWiwOKLcF6locSdYUHIGHwIxAP51cach2Pj+KSd7rD9vICdibIFY
-xPWhKycXJDbDCsFkZJhEG++TwgtMgELotpEjzA==
------END CERTIFICATE-----""";
+MIIF6TCCBNGgAwIBAgIQBffjbSRu81JTaCJ3Mmc5MDANBgkqhkiG9w0BAQsFADBG
+MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRUwEwYDVQQLEwxTZXJ2ZXIg
+Q0EgMUIxDzANBgNVBAMTBkFtYXpvbjAeFw0yMjA5MjAwMDAwMDBaFw0yMzEwMTgy
+MzU5NTlaMBsxGTAXBgNVBAMMECoudGhlbW92aWVkYi5vcmcwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQC7ibOskm1j0mxusryquCqEhTzj0lOjwmpCWTfk
+jdmZzOkXqgucHtsm60jOTxwcG5TnLghajaluKnvPBl/EkbgcZMAhwZjCvQ3L/eWM
+fcwv0xs/mP8joPNP9AL3wySTYlq/yP2L6DDO3RT6Itzpqk+XCDZC1ifh0eGjxZh+
+vkgCm8VZeYyuBDMgOXmAW7UufDFXrJgCuUWtPn2mbofv5S6H5RpupRFtUa8Ef3Iw
+P/tZl1qldiS/bP+b60jayiw1nhDfF0IpTrxtfU7DiYnnIbOZmWWx9bMAQYyg3WoE
+VVTiJoIZ7OuCzZwSAOSIazfub0pq1QTOwXClypvNIsGPUxhnAgMBAAGjggL8MIIC
++DAfBgNVHSMEGDAWgBRZpGYGUqB7lZI8o5QHJ5Z0W/k90DAdBgNVHQ4EFgQUqhAn
+tCBdy8MMZpB2sRBBKJFmK8EwKwYDVR0RBCQwIoIQKi50aGVtb3ZpZWRiLm9yZ4IO
+dGhlbW92aWVkYi5vcmcwDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUF
+BwMBBggrBgEFBQcDAjA9BgNVHR8ENjA0MDKgMKAuhixodHRwOi8vY3JsLnNjYTFi
+LmFtYXpvbnRydXN0LmNvbS9zY2ExYi0xLmNybDATBgNVHSAEDDAKMAgGBmeBDAEC
+ATB1BggrBgEFBQcBAQRpMGcwLQYIKwYBBQUHMAGGIWh0dHA6Ly9vY3NwLnNjYTFi
+LmFtYXpvbnRydXN0LmNvbTA2BggrBgEFBQcwAoYqaHR0cDovL2NydC5zY2ExYi5h
+bWF6b250cnVzdC5jb20vc2NhMWIuY3J0MAwGA1UdEwEB/wQCMAAwggF/BgorBgEE
+AdZ5AgQCBIIBbwSCAWsBaQB3AOg+0No+9QY1MudXKLyJa8kD08vREWvs62nhd31t
+Br1uAAABg1moMZEAAAQDAEgwRgIhAMVP5djOo7j7Ehc+AjNwJGkkEhlCWARLRwBp
+fockK3x2AiEAq8uGTIoc/zq8yZY+7i02OU/QApY96omoR2jSkBwdkUYAdgA1zxkb
+v7FsV78PrUxtQsu7ticgJlHqP+Eq76gDwzvWTAAAAYNZqDG/AAAEAwBHMEUCIQDR
+RMgwOJIjcMpK+oA0dzfAZOWGejfBEDQNi84qNRv3AQIgOtOxh08xDU5AgB1a6L02
+2q3RJKWCoBTrfW4nsgsu8egAdgCzc3cH4YRQ+GOG1gWp3BEJSnktsWcMC4fc8AMO
+eTalmgAAAYNZqDIIAAAEAwBHMEUCICNRgi9EFLHNXntNisGG/3mgbEjuNi0dQ+zD
+TL+mekizAiEAqUN0J8PCqS8OhNpFjnbblvYyjqAmnyXzpteXujcxNuIwDQYJKoZI
+hvcNAQELBQADggEBABpzoRDnIsdErQcTPaQduN8IVH/QZJVKn4OtPEO4fTzxqhvJ
+0WAJ8OZ6Qu3+WxE0bbso55zTaTgdGbxV1wSyRyoRvZslVSo1tYeunR3HabsZ4Z9s
+54j2Ommyy/pURvcwl0N5kv/WridF9BybAYupvcXq+N/EQwwhet2USd+SCag44/2k
+4MSCoTx2+EiyYOrqY60nAyeMHYtFiWsgDcpwdSeS3SoJsKAXFRMAzeHjnX+xZR8r
+rFAzldB7viRdim3SimkGfZdRFJz3+Uzs+ewdaDkclhOyADMaDnJadgZHil/jZP3E
+m/IyZOLJ6P1ZltyRhJ6ak/1xxoMTH7wk4FMZ47k=
+-----END CERTIFICATE-----
+""";

@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:movies/presentation/bloc/top_rated_movie/top_rated_movie_bloc.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import '../provider/top_rated_movies_notifier_test.mocks.dart';
+import '../../helpers/bloc_test_helper.mocks.dart';
 
 void main() {
   late MockGetTopRatedMovies mockGetTopRatedMovies;
